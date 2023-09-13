@@ -13,13 +13,16 @@ output:
   
   Exercise 1
   Why does the code not work?
+  
   my_variable <- 10
   my_varıable
   
     ```{r, eval=TRUE}
+    
   my_variable <- 10
   my_variable
-    ````
+  
+    ```
 
   The code doesn't work because the i in "my_variable" is replaced by a different
   letter (no dot), and so R cannot recognize the variable, the code is referring to.
@@ -28,29 +31,40 @@ output:
   Tweak the following R commands so that they run correctly.
   The correct running code has been inserted. 
   
-    ```{r, eval=TRUE}
-  install.packages("tidyverse")
-  library(tidyverse)
-    ````
 
-  Install the package first
-    
+  install.packages("tidyverse")
     ```{r, eval=TRUE}
+    
+  library(tidyverse)
+    
+    ```
+ 
+  Tweak: Install the package first
+  
+    ```{r, eval=TRUE}
+    
   ggplot(data = mpg) + 
     geom_point(mapping = aes(x = displ, y = hwy))
-    ````  
     
-  dota changed to data
+    ```
+    
+  Tweak: dota changed to data
   
     ```{r, eval=TRUE}
+    
   filter(mpg, cyl == 8)
-    ````
-  The command filter demands "==" syntax + spell filter correctly
+    
+    ```
+  
+  Tweak: The command filter demands "==" syntax + spell filter correctly
   
     ```{r, eval=TRUE}
+    
   filter(diamonds, carat > 3)
-    ````
-    The dataset is called diamonds, not diamond - now specified correctly
+    
+    ```
+    
+    Tweak: The dataset is called diamonds, not diamond - now specified correctly
   
   Exercise 3
   Alt + Shift + K opens an overview of shortcuts.

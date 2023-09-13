@@ -363,8 +363,6 @@ display: none;
 <ol style="list-style-type: decimal">
 <li>Reading the CSV file:</li>
 </ol>
-<pre class="r"><code>library(readr)
-library(dplyr)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;dplyr&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:stats&#39;:
@@ -373,9 +371,8 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>applications &lt;- read_csv(&quot;applications.csv&quot;)</code></pre>
-<pre><code>## Rows: 696 Columns: 4</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## Rows: 696 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): race
 ## dbl (3): job_id, criminal, call

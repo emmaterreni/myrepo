@@ -15,11 +15,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 1)  Reading the CSV file:
 
-```{r , echo=FALSE}
+```{r}
 library(readr)
 library(dplyr)
 
-applications <- read_csv("A HOMEWORK/A2/applications.csv")
+applications <- read_csv("applications.csv")
 ```
 
 2.  Heading to view
