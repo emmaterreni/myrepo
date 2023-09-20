@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="EMT" />
+<meta name="author" content="Emma Terreni" />
 
-<meta name="date" content="2023-09-16" />
+<meta name="date" content="2023-09-19" />
 
 <title>B1</title>
 
@@ -351,8 +351,8 @@ display: none;
 
 
 <h1 class="title toc-ignore">B1</h1>
-<h4 class="author">EMT</h4>
-<h4 class="date">2023-09-16</h4>
+<h4 class="author">Emma Terreni</h4>
+<h4 class="date">2023-09-19</h4>
 
 </div>
 
@@ -371,6 +371,20 @@ display: none;
 ## 5 Chiri-Yurt         0     0     NA         4          5
 ## 6 Gansolchu          0     1      0         0          0</code></pre>
 <pre><code>## [1] 318   6</code></pre>
+<pre><code>## # A tibble: 318 × 6
+##    village       groznyy  fire deaths preattack postattack
+##    &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Elistanzhi          0     0     NA         4          3
+##  2 Malye Shuani        0     1      0         0          1
+##  3 Belgatoy            0     1     34         1          0
+##  4 Oktya&#39;brskoe        0     0     NA         0          0
+##  5 Chiri-Yurt          0     0     NA         4          5
+##  6 Gansolchu           0     1      0         0          0
+##  7 Achkoi-Martan       0     0     NA         4          8
+##  8 Khidi-Khutor        0     1      0         3          1
+##  9 Agishbatoi          0     0     NA         2          0
+## 10 Shirdi-Mokhk        0     1      0         1          0
+## # ℹ 308 more rows</code></pre>
 <p><strong>Question 1</strong></p>
 <pre class="r"><code>    chechen %&gt;%
         count(fire)</code></pre>
@@ -468,8 +482,8 @@ decrease in attacks in non-shelled villages, the decrease in the shelled
 villages is substantial. When looking at the distribution of the
 differences in attacks, we see that the difference in means is mainly
 driven by a few villages experiencing a vast drop in attacks after
-Russian fire, as well a generally more skewed distribution compared to
-the villages not shelled.</p>
+Russian fire, as well as a generally more skewed distribution compared
+to the villages not shelled.</p>
 <pre class="r"><code>chechen %&gt;%
   mutate(diffattacks = postattack - preattack) %&gt;%
   group_by(fire) %&gt;%
@@ -530,6 +544,204 @@ We needed pre-treatment data, so to speak, to evaluate any type of
 effect before even beginning to talk about causality.</p>
 <pre class="r"><code>mean(chechen_new$diffattacks[chechen_new$fire == 1])-mean(chechen_new$diffattacks[chechen_new$fire == 0])</code></pre>
 <pre><code>## [1] -0.5157233</code></pre>
+</div>
+<div id="inequality-of-success-in-online-music-markets" class="section level3">
+<h3>Inequality of Success in Online Music Markets</h3>
+<p><strong>Question 1</strong></p>
+<p>Proportion of users assigned separately for the Social Influence and
+the Independent condition.</p>
+<pre class="r"><code>users1_new &lt;- users1 %&gt;%
+  mutate(expnr = 1)
+
+users2_new &lt;- users2 %&gt;%
+  mutate(expnr = 2)
+
+users_full &lt;- rbind(users1_new,users2_new)
+
+view(users_full)
+
+  table1 &lt;- prop.table(table(users_full$expnr, users_full$world_id), margin = 1)
+  round(table1,3)</code></pre>
+<pre><code>##    
+##         1     9
+##   1 0.328 0.672
+##   2 0.323 0.677</code></pre>
+<pre class="r"><code>  tabledata1 &lt;- prop.table(table(users1$world_id))
+  tabledata2 &lt;- prop.table(table(users2$world_id))
+
+  tabledata1</code></pre>
+<pre><code>## 
+##         1         9 
+## 0.3275782 0.6724218</code></pre>
+<pre class="r"><code>  tabledata2</code></pre>
+<pre><code>## 
+##         1         9 
+## 0.3227166 0.6772834</code></pre>
+<p>The proportions within each experiment are practically identical,
+with 33% assigned to the Social Influence condition and 67% to the
+Independence condition in Experiment 1. The equivalent proportions are
+32% and 68% for experiment 2.</p>
+<p><strong>Question 2</strong></p>
+<p>The average number of downloads (assuming this is equivalent to
+purchasing the song) per user.</p>
+<pre class="r"><code>usersfull_temp &lt;- users_full %&gt;%
+  group_by(expnr, world_id) %&gt;%
+  summarise(
+    mean_download = mean(download)
+    )</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;expnr&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>usersfull_temp</code></pre>
+<pre><code>## # A tibble: 4 × 3
+## # Groups:   expnr [2]
+##   expnr world_id mean_download
+##   &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;
+## 1     1        1          42.2
+## 2     1        9          47.2
+## 3     2        1         301. 
+## 4     2        9         124.</code></pre>
+<p>The average number of downloads per user in Experiment 1 is 42.2 for
+the people assigned the social influence condition and 47.15 for the
+people assigned the Independence condition.</p>
+<p>The average number of downloads per user in Experiment 2 is 301.2 for
+the people assigned the social influence condition and 124.1 for the
+people assigned the independence condition.</p>
+<pre class="r"><code># calculating number of workers
+usersnr &lt;- users_full %&gt;%
+  group_by(expnr, world_id) %&gt;%
+  summarise(n_users = n())</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;expnr&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre class="r"><code>head(usersnr)</code></pre>
+<pre><code>## # A tibble: 4 × 3
+## # Groups:   expnr [2]
+##   expnr world_id n_users
+##   &lt;dbl&gt;    &lt;dbl&gt;   &lt;int&gt;
+## 1     1        1     702
+## 2     1        9    1441
+## 3     2        1     689
+## 4     2        9    1446</code></pre>
+<pre class="r"><code># calculating total number of times a song was listened to
+songs1_new &lt;- songs1 %&gt;%
+  mutate(expnr = 1)
+songs2_new &lt;-songs2 %&gt;%
+  mutate(expnr = 2)
+songs_full &lt;- rbind(songs1_new,songs2_new)
+
+songsnrtemp &lt;- songs_full %&gt;%
+  group_by(expnr) %&gt;%
+  summarise(
+            listen_soctotal = sum(listen_soc),
+            listen_indeptotal = sum(listen_indep)
+            )
+songsnrtemp</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   expnr listen_soctotal listen_indeptotal
+##   &lt;dbl&gt;           &lt;dbl&gt;             &lt;dbl&gt;
+## 1     1            2461              5394
+## 2     2            2455              5643</code></pre>
+<pre class="r"><code>songsnr &lt;- songsnrtemp %&gt;%
+    pivot_longer(
+    cols = starts_with(&quot;listen&quot;), 
+    names_to = &quot;world_id&quot;, 
+    values_to = &quot;listen_total&quot;
+    )
+
+songsnr$world_id[which(songsnr$world_id==&quot;listen_soctotal&quot;)] &lt;- &quot;1&quot;
+songsnr$world_id[which(songsnr$world_id==&quot;listen_indeptotal&quot;)] &lt;- &quot;9&quot;
+songsnr$world_id &lt;- as.numeric(songsnr$world_id)
+
+# merging users and song data
+totals &lt;- merge(usersnr, songsnr, by=c(&quot;expnr&quot;,&quot;world_id&quot;))
+totals &lt;- totals %&gt;%
+  mutate(listen_per_user = listen_total/n_users)
+totals</code></pre>
+<pre><code>##   expnr world_id n_users listen_total listen_per_user
+## 1     1        1     702         2461        3.505698
+## 2     1        9    1441         5394        3.743234
+## 3     2        1     689         2455        3.563135
+## 4     2        9    1446         5643        3.902490</code></pre>
+<p>The average listens per user in Experiment 1 is 3.51 for the people
+assigned the social influence condition and 3.74 for the people assigned
+the Independence condition.</p>
+<p>The average listens per user in Experiment 2 is 3.56 for the people
+assigned the social influence condition and 3.9 for the people assigned
+the independence condition.</p>
+<p>It seems odd that there are less listens than downloads per user. If
+we use the songs-dataset for downloads as well as listens, there will be
+lower downloads than listens, leading me to believe that the relevant
+downloads-data is from the songs-data and not the users-data.</p>
+<p><strong>Question 3</strong></p>
+<pre class="r"><code>library(ineq)
+
+songs_full %&gt;%
+  group_by(expnr) %&gt;%
+  summarise(
+    gini_down_soc = ineq(down_soc),
+    gini_down_indep = ineq(down_indep),
+    gini_listen_soc = ineq(listen_soc),
+    gini_listen_indep = ineq(listen_indep)
+    )</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   expnr gini_down_soc gini_down_indep gini_listen_soc gini_listen_indep
+##   &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt;             &lt;dbl&gt;
+## 1     1         0.334           0.244           0.169            0.121 
+## 2     2         0.457           0.187           0.420            0.0898</code></pre>
+<p>The results support the hypothesis that inequality in both listens
+and downloads is higher under the social influence condition than the
+independent condition. Furthermore, in Experiment 2 where the songs were
+ranked according to popularity as well as displaying number of downloads
+for each song, the inequality is substantially larger.</p>
+<p><strong>Question 4</strong></p>
+<pre class="r"><code>users_full %&gt;%
+  group_by(expnr, world_id) %&gt;%
+  summarise(
+    mean_web = mean(web, na.rm = TRUE),
+    mean_visit = mean(visit, na.rm = TRUE),
+    mean_purchase = mean(purchase, na.rm = TRUE),
+    n = n()
+  )</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;expnr&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 4 × 6
+## # Groups:   expnr [2]
+##   expnr world_id mean_web mean_visit mean_purchase     n
+##   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt; &lt;int&gt;
+## 1     1        1     4.50       1.87         0.721   702
+## 2     1        9     4.51       1.90         0.733  1441
+## 3     2        1     4.51       1.96         0.749   689
+## 4     2        9     4.47       1.91         0.734  1446</code></pre>
+<p>The groups are on average practically identical across experiment and
+condition type. Additionally, the group sizes for each condition are
+similar.</p>
+<p><strong>Question 5</strong></p>
+<pre class="r"><code>exp1effect_d &lt;- ineq(songs1$down_soc)-ineq(songs1$down_indep)
+exp2effect_d &lt;- ineq(songs2$down_soc)-ineq(songs2$down_indep)
+
+exp1effect_d</code></pre>
+<pre><code>## [1] 0.09055846</code></pre>
+<pre class="r"><code>exp2effect_d</code></pre>
+<pre><code>## [1] 0.2696289</code></pre>
+<pre class="r"><code>exp1effect_d - exp2effect_d</code></pre>
+<pre><code>## [1] -0.1790704</code></pre>
+<pre class="r"><code>exp1effect_l &lt;- ineq(songs1$listen_soc)-ineq(songs1$listen_indep)
+exp2effect_l &lt;- ineq(songs2$listen_soc)-ineq(songs2$listen_indep)
+
+exp1effect_l</code></pre>
+<pre><code>## [1] 0.04774469</code></pre>
+<pre class="r"><code>exp2effect_l</code></pre>
+<pre><code>## [1] 0.3303566</code></pre>
+<pre class="r"><code>exp1effect_l - exp2effect_l</code></pre>
+<pre><code>## [1] -0.2826119</code></pre>
+<p>The difference in the change in Gini-coefficient is .18 and .28
+gini-points for downloads and listens respectively. The between study
+comparison reflects the extra increase in inequality from exposing the
+users to an ordering of the songs by popularity. One could suspect this
+between study to have less internal validity simply from the fact that
+we cannot be sure whether the experiments were conducted similarly and
+thus are believably comparable. However, question 4 revealed that the
+groups in the two experiments look similar in measurable characteristics
+which strengthens the validity of the between study comparison.</p>
 </div>
 </div>
 
