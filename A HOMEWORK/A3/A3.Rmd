@@ -1,0 +1,159 @@
+---
+title: "A3"
+author: "EMT"
+date: "2023-09-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+
+anes <- read_csv("ANES.csv")
+anes
+```
+
+## Part 2
+
+1.  Creating VEP turnout
+
+```{r}
+
+anes$VEP_turnout <- anes$votes/anes$VEP * 100
+
+```
+
+2.  
+
+```{r}
+head(anes)
+```
+
+The first value of VEP_turnout is 54.2, the unit of measurement is percent, so the interpretation is that 54.2 % of the eligible voters actually cast a vote. This is to be expected from a voting eligible population of 159635 people and 86515 votes.
+
+3.  
+
+```{r}
+anes$VAP_turnout <- anes$votes/anes$VAP * 100
+
+```
+
+4.  
+
+```{r}
+head(anes)
+```
+
+The first value of VAP_turnout is 52.6%, meaning that 52.6% of the voting age population voted. This is to be expected from a voting age population of 164445 people and 86515 votes.
+
+5.  
+
+The VAP_turnout is lower than VEP_turnout which makes sense since the denominator will always be larger than or equal to that of the VEP_turnout, since the voting eligible population is a subset of the voting age population.
+
+6.  
+
+```{r}
+mean_VEP_turnout <- mean(anes$VEP_turnout)
+mean_VEP_turnout
+```
+
+The mean of VEP turnout is 48 percent, meaning that across the 13 federal elections, 48 percent of the voting eligible population voted.
+
+7.  
+
+```{r}
+mean_ANES_turnout <- mean(anes$ANES_turnout)
+mean_ANES_turnout
+
+```
+
+The mean ANES turnout across the 13 federal elections was 64.8 percent, meaning that 64.8 percent of ANES respondents reported voting in the election.
+
+8.  
+
+The ANES reported voter turnout is much higher than the actual VEP voter turnout (about 18 percentage points), which suggests that people in the ANES questionnaire are lying, saying that they voted when they actually didn't. It could also reflect some selection into the ANES data, meaning that people who are more likely to take the questionnaire are also more likely to be politically active and vote.
+
+## Part 3
+
+1.  
+
+```{r}
+anes$turnout_bias <- anes$ANES_turnout - anes$VEP_turnout
+```
+
+2.  
+
+```{r}
+head(anes)
+```
+
+The turnout bias is the difference between the VEP turnout and the ANES turnout, and thus does take on the expected positive values - indicating that ANES turnout is higher than VEP turnout. The unit of measurement is percentage points.
+
+3.  
+
+    p \<- ggplot(data = level_k_summary,
+
+    mapping = aes(x = levelk,
+
+    fill = as.factor(elite)))
+
+    p + geom_bar(stat = "identity",
+
+    position = "dodge",
+
+    aes(y = pct, group = elite)) +
+
+    scale_fill_discrete(
+
+    guide = guide_legend(title = "Elite"),
+
+    labels = c("Elite", "Undergrad")
+
+    ) +
+
+    theme_classic() +
+
+    xlab("Level-K") +
+
+    ylab("Proportion")
+
+```{r}
+library(ggplot2)
+
+p <- ggplot(data = anes)
+p <- p + geom_histogram(mapping = aes(x = turnout_bias ), binwidth=1)
+p <- p + theme_classic() + xlab("Turnout bias") + ylab("Frequency")         
+p
+
+p_d <- ggplot(data = anes)
+p_d <- p_d + geom_histogram(mapping = aes(x = turnout_bias, y=..density.. ), binwidth=1)
+p_d <- p_d + theme_classic() + xlab("Turnout bias") + ylab("Frequency")         
+p_d <- p_d + stat_function(fun = dnorm, args = list(mean = mean(anes$turnout_bias), sd = sd(anes$turnout_bias)))
+p_d
+```
+
+All the values are positive and the variable does look somewhat normally distributed, centered around the mean of 16 with quite similar lengthed tails.
+
+4.  
+
+```{r}
+anes %>%
+  group_by(presidential) %>%
+  summarise(mean_ANES_turnout = mean(ANES_turnout),
+            mean_VEP_turnout  = mean(VEP_turnout),
+            mean_turnoutbias  = mean(turnout_bias)
+            )
+```
+
+On average, the ANES turnout was 55%, meaning that 55% of the ANES respondents reported to have voted. On average, 39.6% of the eligible voting population actually voted in the midterm elections. The turnoutbias is 15.4 percentage points, meaning that the average ANES turnout was 15.4 percentage points higher than the average VEP turnout.
+
+On average, the ANES turnout was 73.3%, meaning that 73.3% of the ANES respondents reported to have voted in the presidential elections. On average, 55.2% of the eligible voting population actually voted in the midterm elections. The turnoutbias is 18.1 percentage points, meaning that the average ANES turnout was 18.1 percentage points higher than the average VEP turnout.
+
+The turnout is higher for presidential elections than for midterms (18 percentage points higher for the ANES turnout and 15 percentage points higher for VEP turnout). The turnout-bias also increases in absolute terms, meaning that the gap between the ANES reported turnout rate and the VEP turnout rate is larger for presidential elections than for midterm elections. This could reflect that people feel more social pressure to say that they voted in a presidential election than in midterm elections.
+
+In relative terms, the turnout bias actually decreases.
