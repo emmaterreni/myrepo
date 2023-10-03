@@ -96,9 +96,7 @@ head(anes)
 
 The turnout bias is the difference between the VEP turnout and the ANES turnout, and thus does take on the expected positive values - indicating that ANES turnout is higher than VEP turnout. The unit of measurement is percentage points.
 
-3.  
-
-    p \<- ggplot(data = level_k_summary,
+3.  p \<- ggplot(data = level_k_summary,
 
     mapping = aes(x = levelk,
 
@@ -144,12 +142,15 @@ All the values are positive and the variable does look somewhat normally distrib
 4.  
 
 ```{r}
+
 anes %>%
   group_by(presidential) %>%
   summarise(mean_ANES_turnout = mean(ANES_turnout),
             mean_VEP_turnout  = mean(VEP_turnout),
             mean_turnoutbias  = mean(turnout_bias)
             )
+
+
 ```
 
 On average, the ANES turnout was 55%, meaning that 55% of the ANES respondents reported to have voted. On average, 39.6% of the eligible voting population actually voted in the midterm elections. The turnoutbias is 15.4 percentage points, meaning that the average ANES turnout was 15.4 percentage points higher than the average VEP turnout.

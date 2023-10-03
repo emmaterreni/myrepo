@@ -86,7 +86,7 @@ feel1v4
 
 ```
 
-Yes, the respondents' answers are very similar over time. The error-minimizing line would be the 45 degree line although there is some random noise around it.
+Yes, the respondents' answers are very similar over time. The error-minimizing line would be the 45 degree line, in the data it does look like the observations follow this line, although there is some random noise around it. This could suggest, as the assignment writes, that the researchers have reused the feel variable from the CCAP data and added random noise to create the "control group" for each round of feel-survey.
 
 **Question 5**
 
@@ -119,11 +119,11 @@ dim(grades)
 
 a) Each observation in the dataset represents a student, the variables reflect the specific student's performance in their class.
 
-b) We will use the midterm test scores, i.e. `midterm` as our X variable. It is a non-binary variable as it kan take on values between 0 and 100.
+b) We will use the midterm test scores, i.e. `midterm` as our X variable. It is a non-binary variable as it can take values between 0 and 100.
 
-c) As stated in the assignment title, we want to predict final exam scores and thus our Y variable will be `final`.
+c) As stated in the assignment title, we want to predict final exam scores and thus our Y variable will be `final`. This variable is non-binary as it can values between 0 and 100.
 
-d) The correlation coefficient between the midterm test scores and the finals test scores is positive at .716
+d) The correlation coefficient between the midterm test scores and the finals test scores is positive and quite strong at .716.
 
 ```{r}
 cor_xy <- cor(grades$midterm,grades$final)
@@ -171,11 +171,11 @@ delta_y_10 <- 10*.9704
 delta_y_10
 ```
 
-Question 4
+**Question 4**
 
 ```{r}
 R2 <- cor_xy^2
 R2
 ```
 
-The R-squared is .51 and can be interpreted as the share of the variation in finals test scores that is explained by variation in mid term test scores. Similarly, it reflects how much better the linear regression model is at predicting finals test scores compared to taking the sample mean. Just above half of the variation in finals test scores can be explained by variation in the midterm scores.
+The R-squared is .51 and can be interpreted as the share of the variation in finals test scores that is explained by variation in mid term test scores. It reflects how much better the linear regression model is at predicting finals test scores compared to taking the sample mean. Just above half of the variation in finals test scores can be explained by variation in the midterm scores. The R-squared can also be retrieved from the summarized output of the linear regression.
