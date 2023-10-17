@@ -1,0 +1,201 @@
+---
+title: "B3"
+author: "EMT"
+date: "2023-10-16"
+output: 
+  html_document: 
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## B3 HOMEWORK
+
+### Chapter 1 - Problem 22
+
+The probability of the eldest 3 children being the 3 girls is 5%.
+
+```{r}
+sims <- 100000
+children <- c("girl","girl","girl","boy","boy","boy")
+event <- 0
+
+
+for (i in 1:sims) {
+  orders <- sample(x=children, size=6, replace=FALSE)
+  if (orders[1]=="girl" & orders[2]=="girl" & orders[3]=="girl"){
+    event <- event+1
+  }
+}
+
+answer <- event/sims
+answer
+```
+
+### Chapter 1 - Problem 34
+
+The probability of getting 5 of each dice-value in a throw of 30 dice is 0,04%
+
+```{r}
+sims <- 100000
+dice <- c(1,2,3,4,5,6)
+
+rollcount <- 0
+favoutcome <- 0
+
+
+for (i in 1:sims) {
+      roll <- sample(x=dice, size=30, replace=TRUE)
+      for(v in 1:6){
+      a <- sum(roll==v)
+      if(a==5){
+        rollcount <- rollcount + 1
+      }
+      } 
+      if(rollcount==6){
+        favoutcome <- favoutcome + 1 
+      }
+      rollcount <-0
+     }
+
+answer <- favoutcome/sims
+answer
+
+```
+
+### Chapter 2 - Problem 2
+
+The probability that the woman pregnant with twin boys is carrying identical twins is 50%.
+
+```{r}
+
+twintype <- c("frat","frat","ident")
+fratcombo <- c("BB","BG","GB","GG")
+identcombo <- c("BB","GG")
+
+identBBcount <- 0
+BBcount <- 0
+
+for (i in 1:sims){
+  twintypei <- sample(twintype, 1)
+  if(twintypei=="frat"){
+    sexcombo <- sample(fratcombo, 1)
+  }
+  else{
+    sexcombo <- sample(identcombo, 1)
+  }
+  if(twintypei=="ident" & sexcombo == "BB"){
+    identBBcount <- identBBcount + 1
+  }
+  if(sexcombo == "BB"){
+    BBcount <- BBcount+1
+  }
+}
+
+answer <- identBBcount/BBcount
+answer
+```
+
+### Chapter 2 - Problem 32
+
+For all three scenarios listed, the probability is 2/3 = 66,6%.
+
+The event A\>B is independent of B\>C and should thus have the same probability whether conditioning on B\>C or not.
+
+The event B\>C is not independent of C\>D and the probability should be lower for B\>C given that C\>D.
+
+```{r}
+a <- c(4,4,4,4,0,0)
+b <- c(3,3,3,3,3,3)
+c <- c(6,6,2,2,2,2)
+d <- c(5,5,5,1,1,1)
+
+acount <- 0
+bcount <- 0
+ccount <- 0
+dcount <- 0
+
+aacount <- 0
+abcount <- 0
+
+for (i in 1:sims){
+  aroll <- sample(x=a, size=1, replace = TRUE)
+  broll <- sample(x=b, size=1, replace = TRUE)
+  croll <- sample(x=c, size=1, replace = TRUE)
+  droll <- sample(x=d, size=1, replace = TRUE)
+  
+  # PART A
+  if(aroll>broll){
+    acount <- acount + 1
+  }
+   if(broll>croll){
+    bcount <- bcount + 1
+   }
+   if(croll>droll){
+    ccount <- ccount + 1
+   }
+   if(droll>aroll){
+    dcount <- dcount + 1
+   }
+ 
+   # PART B
+  if(broll>croll){
+    if(aroll>broll){
+      aacount <- aacount + 1
+      }
+    }
+  if(broll>croll){
+    if(croll>droll){
+      abcount <- abcount + 1
+      }
+    }
+}
+
+aanswer <- acount/sims
+banswer <- bcount/sims
+canswer <- ccount/sims
+danswer <- dcount/sims
+aanswer
+banswer
+canswer
+danswer
+
+baanswer <- aacount/bcount
+baanswer
+
+bbanswer <- abcount/ccount
+bbanswer
+
+```
+
+### Chapter 2 - Problem 38
+
+There is a 1/7 = 14,3% probability of getting the car from not switching and a 2/7=28,3% probability of getting the car when switching.
+
+```{r}
+sims <- 100000
+doors <- c("goat", "goat", "goat", "goat", "car", "goat", "goat")
+result.switch <- result.noswitch <- rep(NA, sims)
+
+  for (i in 1:sims) {
+  ## randomly choose the initial door
+  initialdoor <- sample(1:7, size = 1)
+  result.noswitch[i] <- doors[initialdoor]
+  remain <- doors[-initialdoor] # remaining six doors after initial door is chosen
+  ## Monty chooses three doors with a goat
+  if (doors[initialdoor] == "car"){ # initial door holds the car
+    monty <- sample(1:6, size=3)
+  } else{ # 5 goats and one car left
+    car_placement <- which(grepl("car", remain))
+    tmp <- c(1,2,3,4,5,6)
+    monty <- sample(tmp[tmp!=car_placement], 3)
+  }
+    remain_stp2 <- remain[-monty] 
+    result.switch[i] <- sample(remain_stp2, 1)
+  }
+  
+mean(result.noswitch == "car") 
+mean(result.switch == "car")
+```
